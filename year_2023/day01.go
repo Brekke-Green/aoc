@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 func main() {
+	start := time.Now()
 	result := 0
 	data, err := os.ReadFile("day01_input.txt")
 	if err != nil {
@@ -50,4 +52,6 @@ func main() {
 	}
 
 	fmt.Println(result)
+	duration := time.Since(start)
+	fmt.Println(duration)
 }
