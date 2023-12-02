@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -22,7 +23,7 @@ func main() {
 	dataArr = dataArr[1:]
 
 
-//	realGames := 0
+	realGames := 0
 	dataMap := make(map[int][]string)
 
 	for i, line := range dataArr {
@@ -38,11 +39,19 @@ func main() {
 			cube := strings.Split(game, ",")
 			for _, c := range cube {
 				die := strings.Split(c, " ")
-				if cubes[die[1]] < die[int(die[0])] {
+				n, err := strconv.Atoi(die[0])
+				if err != nil {
+					os.Exit(1)
+				}
+				if cubes[die[1]] < n {
 					flag = false
 				}
+			}
+			if flag {
+				realGames+=num
 			}
 		}
 	}
 
+	fmt.Println(realGames)
 }
