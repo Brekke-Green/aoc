@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -12,8 +13,9 @@ type Cord struct {
 }
 
 type Number struct {
-	start	Cord
-	length	int
+	start		Cord
+	length		int
+	neighbors	[]string
 }
 
 func main() {
@@ -48,6 +50,7 @@ func main() {
 	}
 
 	var nums []Number
+	var validNums []Number
 
 	yCord := 0
 	xCord := 0
@@ -98,9 +101,50 @@ func main() {
 		}
 	}
 
+	result := 0
+
 	for _, num := range nums {
-		fmt.Println(num)
+		
+		for i := (num.start.y - 1); i <= (num.start.y + 1); i++ {
+			if i >= 0 && i < len(data2D) {
+				for j := (num.start.x - 1); j <= (num.start.x + num.length); j++ {
+					// check if out of bounds
+					if j >= 0 && j < len(data2D[0]) {	
+					// skip the cords of the number
+						if i == num.start.y {
+							if j >= num.start.x && j < (num.start.x + num.length) {
+								continue
+							}
+						}
+					// append chars to neighbors
+						num.neighbors = append(num.neighbors, data2D[i][j])
+					}
+				}
+			}
+		}
+		// check all neighbors for all "." and don't add to result to validNums
+		for _, neighbor := range num.neighbors {
+			if neighbor != "." {
+				fmt.Printf("valid symbol = %v", neighbor)
+				validNums = append(validNums, num)
+				break
+			}
+		}
+		fmt.Println(num.neighbors)
 	}
+
+
+	
+	for _, num := range validNums {
+		s := strings.Join(data2D[num.start.y][num.start.x:(num.start.x+num.length)], "")
+		n, err := strconv.Atoi(s)
+		if err != nil {
+			panic(err)
+		}
+		result+=n
+	}
+	fmt.Printf("The valid nums list %#v\n", validNums)
+	fmt.Printf("The result is %v\n", result)
 }
 
 //func findNum(grid [][]string, x int, y int) [][]int {
