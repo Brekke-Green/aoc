@@ -41,24 +41,22 @@ func main() {
 		winnersInt := []int{}
 		playersInt := []int{}	
 
-		for i, s := range winners {
+		for _, s := range winners {
 			if s == "" {
 				continue
 			}
 			num, err := strconv.Atoi(s)
 			if err != nil {
-				fmt.Println(i)
 				panic(err)
 			}
 			winnersInt = append(winnersInt, num)
 		}
-		for i, s := range players {
+		for _, s := range players {
 			if s == "" {
 				continue
 			}
 			num, err := strconv.Atoi(s)
 			if err != nil {
-				fmt.Println(i)
 				panic(err)
 			}
 			playersInt = append(playersInt, num)
@@ -69,6 +67,21 @@ func main() {
 	}
 
 	// SCORE THE CARD GAMES NOW
+	result := 0
+	for i := 0; i < len(cardsList); i++ {
+		for _, score := range cardsList[i].players {
+			for _, winner := range cardsList[i].winners {
+				if score == winner {
+					if cardsList[i].score < 1 {
+						cardsList[i].score+=1
+					} else {
+						cardsList[i].score*=2
+					}
+				}
+			}
+		}
+		result+=cardsList[i].score
+	}
 
-	fmt.Printf("%#v", cardsList)
+	fmt.Printf("Final score is %v", result)
 }
