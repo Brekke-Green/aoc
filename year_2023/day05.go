@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		os.Exit(1)
 	}
-	fmt.Println(string(data))
+	//fmt.Println(string(data))
 	dataArr := strings.Split(string(data), "\n")
 
 	// handle seeds
@@ -25,7 +25,7 @@ func main() {
 		}
 		seeds = append(seeds, s)
 	}
-	fmt.Printf("%#v\n", seeds)
+	//fmt.Printf("%#v\n", seeds)
 
 
 	// handle parsing maps
@@ -51,31 +51,28 @@ func main() {
 		mappings = append(mappings, intsArr)
 	}
 	// run the seeds through mapping
-	for i, seed := range seeds {
-		fmt.Printf("INITIAL SEED => %v\n", seed)
-		flag := false 
-		if seed == 14 {
-			flag = true
-		}
+	
+	for i, _ := range seeds {
+		//fmt.Printf("INITIAL SEED => %v\n", seed)
 		// run through mapping
-		for _, mapping := range mappings {
+		for j, mapping := range mappings {
 
-			if flag {
-				fmt.Printf("%v < %v < %v == %v\n", mapping[1], seeds[i], (mapping[1]+mapping[2]), (seeds[i] >= mapping[1] && seeds[i] < (mapping[1]+mapping[2])))
+			if (seeds[i] >= mapping[1] && seeds[i] <= (mapping[1]+mapping[2]-1)) {
+				seeds[i] = seeds[i] + (mapping[0] - mapping[1])
+				fmt.Printf("%v from %v\n", seeds[i], mappings[j])
 			}
-			if (seeds[i] >= mapping[1] && seeds[i] < (mapping[1]+mapping[2])) {
-				if flag {
-					fmt.Printf("%v\n", seeds[i])
-				}
-				seeds[i] = mapping[0] + (seeds[i] - mapping[1])
-				if flag {
-					fmt.Printf("%v\n", seeds[i])
-				}
-			}
+
 		}
 
 	}
-	fmt.Printf("%#v", seeds)
+	fmt.Printf("%#v\n", seeds)
+	lowest := seeds[0]
+	for _, n := range seeds {
+		if n < lowest {
+			lowest = n
+		}
+	}
+	fmt.Println(lowest)
 
 	// find smallest seed and print
 
