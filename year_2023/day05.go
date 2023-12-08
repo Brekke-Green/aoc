@@ -7,8 +7,14 @@ import (
 	"strings"
 )
 
+type Mapping struct {
+	dest	int64
+	src		int64
+	r		int64
+}
+
 func main() {
-	data, err := os.ReadFile("day05_sample.txt")
+	data, err := os.ReadFile("day05_input.txt")
 	if err != nil {
 		os.Exit(1)
 	}
@@ -29,49 +35,64 @@ func main() {
 
 
 	// handle parsing maps
-	var mappingStrings []string
+	var mappingStrings [][]string
+	var mapping []string
 	for _, line := range dataArr {
-		if line != "" && !strings.Contains(line, ":") {
-			mappingStrings = append(mappingStrings, line)
+		if strings.Contains(line, ":") {
+			mapping = []string{}
+		} else if line == "" {
+			mappingStrings = append(mappingStrings, mapping)
+		} else {
+			mapping = append(mapping, line)
 		}
 	}
 	
-	var mappings [][]int64
+	var mappings [][]Mapping
 
-	for _, s := range mappingStrings {
-		sArr := strings.Split(s, " ")
-		var intsArr []int64
-		for _, str := range sArr {
-			num, err := strconv.ParseInt(str, 10, 64)
-			if err != nil {
-				panic(err)
-			}
-			intsArr = append(intsArr, num)
+	for j, s := range mappingStrings {
+		if len(s) == 0 || j == len(mappingStrings) - 1 {
+			continue
 		}
-		mappings = append(mappings, intsArr)
+		m := []Mapping{}
+		for _, l := range s {
+			sArr := strings.Split(l, " ")
+			var row Mapping
+			for i, str := range sArr {
+				num, err := strconv.ParseInt(str, 10, 64)
+				if err != nil {
+					panic(err)
+				}
+				if i == 0 {row.dest = num}
+				if i == 1 {row.src = num}
+				if i == 2 {row.r = num}
+			}
+			m = append(m, row)
+		}
+
+		mappings = append(mappings, m)
 	}
-	// run the seeds through mapping
+	//run the seeds through mapping
 	
 	for i, _ := range seeds {
-		//fmt.Printf("INITIAL SEED => %v\n", seed)
-		// run through mapping
-		for j, mapping := range mappings {
-
-			if (seeds[i] >= mapping[1] && seeds[i] <= (mapping[1]+mapping[2]-1)) {
-				seeds[i] = seeds[i] + (mapping[0] - mapping[1])
-				fmt.Printf("%v from %v\n", seeds[i], mappings[j])
+	//	 run through mapping
+		for _, group := range mappings {
+			for _, mapping := range group {
+				if (seeds[i] >= mapping.src && seeds[i] <= (mapping.src+mapping.r-1)) {
+					seeds[i] = seeds[i] + (mapping.dest - mapping.src)
+					break
+				}
 			}
-
 		}
-
 	}
-	fmt.Printf("%#v\n", seeds)
+	fmt.Printf("%#v\n", mappings)
 	lowest := seeds[0]
 	for _, n := range seeds {
 		if n < lowest {
 			lowest = n
 		}
 	}
+	
+	fmt.Printf("%#v\n", seeds)
 	fmt.Println(lowest)
 
 	// find smallest seed and print
