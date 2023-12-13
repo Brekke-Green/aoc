@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -46,9 +47,35 @@ func main() {
 		}
 
 		// score cards
+		var counts []int
+		for _, v := range count {
+			counts = append(counts, v)
+		}
+		sort.Sort(sort.Reverse(sort.IntSlice(counts)))
+
+		if counts[0] == 5 {
+			hand.score = append(hand.score, 6)
+		} else if counts[0] == 4 {
+			hand.score = append(hand.score, 5)
+		} else if counts[0] == 1 {
+			hand.score = append(hand.score, 0)
+		} else if counts[0] == 3 && counts[1] == 2 {
+			hand.score = append(hand.score, 4)
+		} else if counts[0] == 3 && counts[1] == 1 {
+			hand.score = append(hand.score, 3)
+		} else if counts[0] == 2 && counts[1] == 2 {
+			hand.score = append(hand.score, 2)
+		} else if counts[0] == 2 && counts[1] == 1 {
+			hand.score = append(hand.score, 1)
+		}
+
+		for _, c := range hand.cards {
+			hand.score
+		}
+
 
 		// append to array of Hands
-
+		
 	}
 
 	// sort arr of hands
