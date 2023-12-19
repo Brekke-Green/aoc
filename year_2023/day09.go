@@ -5,6 +5,8 @@ import (
     "os"
     "strconv"
     "strings"
+
+	"golang.org/x/exp/slices"
 )
 
 func main() {
@@ -32,10 +34,10 @@ func main() {
         dataIntArr = append(dataIntArr, intsRow)
     }
     
-    // create differences slice
-
     // create next digit
-    dataIntArr = nextDigit(&dataIntArr)
+	for i, row := range dataIntArr {
+		dataIntArr[i] = nextDigit(&row)
+	}
 
     // sum all final elements 
 
@@ -45,10 +47,13 @@ func createDifferences() {
 
 }
 
-func nextDigit(nums *[][]int) [][]int {
-    d := *nums
-    for i := range d {
-        d[i] = append(d[i], d[)
-    }
-    return d
+func nextDigit(nums *[]int) []int {
+	var stack [][]int
+	d := *nums
+	// find difference for last digit
+	stack = append(stack, d)
+
+
+
+	return d
 }
